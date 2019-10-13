@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="global.sesoc.libs.repository.BookMapper">
+
+<select id = "selectBook" parameterType = "Book" resultType = "Book">
+
+SELECT
+booknum
+,title
+,publisher
+,author
+,status
+,imageurl
+
+FROM
+BOOKS
+
+
+<if test="_parameter!=null and searchTopic=='제목'">
+where
+title like '%'||#{searchWord}||'%'
+</if>
+<if test="_parameter!=null and searchTopic=='출판사'">
+where
+PUBLISHER like '%'||#{searchWord}||'%'
+</if>
+<if test="_parameter!=null and searchTopic=='저자'">
+where
+author like '%'||#{searchWord}||'%'
+</if>
+<if test="_parameter!=null and searchTopic=='대출가능'">
+where
+status like '%'||#{searchWord}||'%'
+</if>
+
+
+</select>
+
+<select id = "selectCount" parameterType = "Book" resultType = "int">
+
+SELECT
+COUNT(BOOKNUM)
+
+FROM
+BOOKS
+
+<if test="_parameter!=null and searchTopic=='제목'">
+where
+title like '%'||#{searchWord}||'%'
+</if>
+<if test="_parameter!=null and searchTopic=='출판사'">
+where
+PUBLISHER like '%'||#{searchWord}||'%'
+</if>
+<if test="_parameter!=null and searchTopic=='저자'">
+where
+author like '%'||#{searchWord}||'%'
+</if>
+<if test="_parameter!=null and searchTopic=='대출가능'">
+where
+status like '%'||#{searchWord}||'%'
+</if>
+
+
+</select>
+
+<select id = "selectOneBook" parameterType = "String" resultType = "Book">
+
+SELECT
+booknum
+,title
+,publisher
+,author
+,status
+,content
+,imageurl
+
+FROM
+BOOKS
+
+WHERE
+booknum=#{booknum}
+
+
+
+</select>
+
+<select id = "selectBookByBooknum" parameterType = "int" resultType = "Book">
+
+SELECT
+*
+
+FROM
+BOOKS
+
+WHERE
+booknum=#{booknum}
+
+</select>
+
+<update id = "updateBookStatusN" parameterType = "int">
+
+UPDATE BOOKS
+
+SET
+status='N'
+
+WHERE
+booknum=#{booknum}
+
+
+</update>
+
+<update id = "updateBookStatusY" parameterType = "int">
+
+UPDATE BOOKS
+
+SET
+status='Y'
+
+WHERE
+booknum=#{booknum}
+
+
+</update>
+
+<insert id = "insertNewBook" parameterType = "Book">
+
+INSERT INTO books(
+booknum
+,title
+,publisher
+,author
+,status
+,content
+,imageurl
+
+
+)
+VALUES(
+booknum_sequence.nextval
+,#{title}
+,#{publisher}
+,#{author}
+,'Y'
+,#{content}
+,#{imageurl}
+
+
+)
+
+
+</insert>
+
+
+</mapper>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="global.sesoc.libs.repository.LendMapper">
+
+<insert id = "insertLend" parameterType = "Lend">
+
+INSERT INTO LEND(
+lendnum
+,usernum
+,booknum
+,requestdate
+,status
+,title
+,username
+
+)VALUES(
+lendnum_sequence.nextval
+,#{usernum}
+,#{booknum}
+,sysdate
+,'reserved'
+,#{title}
+,#{username}
+
+)
+</insert>
+
+<select id = "selectLend" parameterType = "Lend" resultType = "Lend">
+
+SELECT
+lendnum
+,usernum
+,booknum
+,requestdate
+,startdate
+,enddate
+,returndate
+,status
+,title
+,username
+,delay
+
+FROM
+lend
+
+<if test="usernum!=null">
+WHERE
+usernum =#{usernum}
+</if>
+<if test="title!=null">
+where
+title like '%'||#{title}||'%'
+</if>
+<if test="username!=null">
+where
+username like '%'||#{username}||'%'
+</if>
+order by requestdate asc
+
+
+</select>
+
+<select id = "selectAllLend" resultType = "Lend">
+
+SELECT
+lendnum
+,usernum
+,booknum
+,requestdate
+,startdate
+,enddate
+,returndate
+,status
+,title
+,username
+
+FROM
+LEND
+
+
+order by requestdate asc
+	
+
+
+</select>
+
+<update id = "updateLend" parameterType = "Lend">
+
+UPDATE LEND
+
+SET
+startdate=sysdate
+,status='lent'
+,enddate=TO_DATE(#{enddate}, 'YYYY-MM-DD HH24:MI:SS')
+
+
+
+where
+lendnum=#{lendnum}
+
+
+</update>
+
+
+<select id = "selectOneLend" parameterType = "Lend" resultType = "Lend">
+
+SELECT
+*
+
+FROM
+LEND
+
+WHERE
+lendnum=#{lendnum}
+
+
+
+</select>
+
+<update id = "updateStatus" parameterType = "Lend">
+
+UPDATE LEND
+
+SET
+<if test="status=='reserved'">
+status='rejected'
+</if>
+<if test="status=='lent'">
+status='returned'
+,returndate=sysdate
+</if>
+<if test="status=='delayed'">
+status='delay_returned'
+,returndate=sysdate
+</if>
+
+where
+lendnum=#{lendnum}
+
+</update>
+
+<update id = "updateDelay" parameterType = "Lend">
+
+UPDATE LEND
+<if test="status!='returned' and status!='delay_returned'">
+SET
+delay=#{delay}
+</if>
+<if test="delay gte 1 and status!='delay_returned'">
+,status='delayed'
+</if>
+where
+lendnum=#{lendnum}
+
+
+
+</update>
+
+<select id = "checkLend" parameterType = "Lend" resultType = "Lend">
+
+SELECT
+lendnum
+,usernum
+,booknum
+,requestdate
+,startdate
+,enddate
+,returndate
+,status
+,title
+,username
+,delay
+
+
+FROM
+LEND
+
+WHERE
+booknum=#{booknum}
+
+
+
+</select>
+
+
+</mapper>

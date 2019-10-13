@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="global.sesoc.libs.repository.UserMapper">
+
+	<insert id="signUp" parameterType="User">
+	
+	INSERT INTO USERS(
+	usernum
+	,userid
+	,password
+	,birthdate
+	,username
+	,tel1
+	,tel2
+	,tel3
+	,image
+
+	)VALUES(
+	
+	#{usernum}
+	,#{userid}
+	,#{password}
+	,#{birthdate}
+	,#{username}
+	,#{tel1}
+	,#{tel2}
+	,#{tel3}
+	,#{image}
+
+
+	)
+		
+	</insert>
+	
+	<select id = "selectOneUser" parameterType = "User" resultType = "User">
+	
+	SELECT
+	<if test="password==null">
+	userid
+	</if>
+	
+	<if test="password!=null">
+	usernum
+	,userid
+	,password
+	,to_char(birthdate,'YYYY-MM-DD')AS birthdate
+	,username
+	,tel1
+	,tel2
+	,tel3
+	,image
+	,admin
+	</if>
+	
+	
+	FROM
+	USERS
+	
+	<if test="password==null">
+	WHERE
+	userid=#{userid}
+	</if>
+	<if test="password!=null">
+	WHERE
+	userid=#{userid}
+	and
+	password=#{password}
+	</if>
+
+	</select>
+	
+	<select id = "selectUserByuserNum" parameterType = "String" resultType = "User">
+	
+	SELECT
+	*
+	
+	FROM
+	USERS
+	
+	WHERE
+	usernum=#{usernum}
+	
+	</select>
+	
+	<update id = "updateUser" parameterType = "User">
+	
+	UPDATE USERS
+	
+	SET
+	password=#{password}
+	,username=#{username,jdbcType=VARCHAR}
+	,tel1=#{tel1}
+	,tel2=#{tel2}
+	,tel3=#{tel3}
+	,image=#{image}
+	
+	where
+	usernum=#{usernum}
+	
+	
+	
+	</update>
+
+</mapper>

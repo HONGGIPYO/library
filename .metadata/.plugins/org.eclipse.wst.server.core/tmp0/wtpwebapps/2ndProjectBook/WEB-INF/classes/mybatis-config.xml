@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="global.sesoc.libs.dto.Users" alias="User" />
+		<typeAlias type="global.sesoc.libs.dto.Books" alias="Book" />
+		<typeAlias type="global.sesoc.libs.dto.Lend" alias="Lend" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="Mapper/UserMapper.xml" />
+		<mapper resource="Mapper/BookMapper.xml" />
+		<mapper resource="Mapper/LendMapper.xml" />
+	</mappers>
+</configuration>
